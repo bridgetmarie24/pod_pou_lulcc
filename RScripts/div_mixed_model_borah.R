@@ -11,17 +11,14 @@
 
 # DELETE SOME OF THESE 
 
-library(brms)
-library(tidyverse)
-library(plyr)
+library(brms) # Do bayesian models, use function brm
+library(tidyverse) # 
 library(dplyr)
 library(readr)
 library(tibble)
 library(ggrepel)
 library(flexmix)
 library(modelr)
-library(loo)
-library(here)
 
 # Data imports ####
 # DO THIS
@@ -49,19 +46,6 @@ priors <- c(
   set_prior('normal(0,1)', class = 'b', coef = 'scale_d.et'), 
   set_prior('lkj_corr_cholesky(2)', class = 'L')
 )
-
-# print('Create Model with ARMA terms and gaussian family')
-# AF.arma <- brm(lt ~ (1 + scale_d.urb | Name) + scale_d.urb + scale_d.prcp + scale_d.temp + scale_d.et + scale_d.use + arma(gr = Name),
-#                data = diversions,
-#                family = 'normal',
-#                prior = priors,
-#                iter = 4000,
-#                control = list(max_treedepth = 20,
-#                               adapt_delta = 0.999),
-#                cores = getOption('mc.cores', parallel::detectCores()))
-# 
-# summary(AF.arma)
-# saveRDS(AF.arma, file = '~/scratch/diversion-mods/model_output/mod-arma-final-041123.RDS')
 
 print('Create model with ARMA terms and student-t family')
 # brms is used to run mixed effects models
