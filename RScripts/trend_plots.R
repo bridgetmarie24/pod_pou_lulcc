@@ -7,13 +7,12 @@
 # Date created: 01/23/2023
 
 # Import packages
-library(plyr)
-library(dplyr)
-library(Matrix)
-library(tidyverse)
-library(Kendall)
-library(ggplot2)
-library(ggpubr)
+library(dplyr) # data manipulation
+library(Matrix) # co-dependency with tidyverse
+library(tidyverse) # data manipulation
+library(Kendall) # Mann Kendall test
+library(ggplot2) # plotting
+library(ggpubr) # arrange a grid of plots
 
 # Read in the data  ####
 div <- read.csv('~/Desktop/diversion_models/Data.Inputs/input_full_013023.csv')
