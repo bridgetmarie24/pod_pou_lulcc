@@ -61,7 +61,8 @@ time_brm <- function(data, name){
   mod <- brm(Acre_feet ~ Year,
              data = sub_data,
              family = 'Gamma', # set to gamma distribution because positively constrained data
-             iter = 2000) # run model for 2000 iterations
+             iter = 2000, # run model for 2000 iterations
+             cores = getOption('mc.cores', parallel::detectCores())) # Use all cores
   
   # Start creating a list to export the necessary values
   all_export <- list(model = mod)
@@ -99,5 +100,39 @@ for (i in names) {
     print(paste('no:', i ))
   }
 }
+
+saveRDS(all_mods, paste(cd, '/final_models/time_models_050123.RDS', sep = ''))
+
+# Sort through model separate into non-zero effects ####
+# ---------------------------------------------------- #
+
+sums <- list()
+for (i in names){
+ model <-  all_mods[[i]]$model
+ summary <- summary(model)
+ extract_vals <- rbind(summary$fixed, summary$spec_pars)
+ extract_vals$Name <- i 
+ extract_vals$vars <- rownames(extract_vals)
+ sums[[i]] <- extract_vals
+}
+
+# Check to make sure no big errors in convergence
+sums <- bind_rows(sums)
+sub <- subset(sums, Rhat > 1.01)
+sub <- subset(sums, Bulk_ESS < 400)
+sub <- subset(sums, Tail_ESS < 400)
+
+# Check if Year effect is non-zero 
+
+year_effect <- subset(sums, vars == 'Year' & abs(Estimate) > 0.001)
+names_long <- unique(year_effect$Name)
+for (x in 1:nrow(year_effect)){
+  year_effect$sig[x] <- ifelse(between(0, year_effect$`l-95% CI`[x], year_effect$`u-95% CI`[x]), 'no', 'yes')
+} # Determine if 95% CI overlap 0 
+
+names_pos <- unique(subset(year_effect, Estimate > 0))
+names_neg <- unique(subset(year_effect, Estimate < 0))
+
+
 
 
