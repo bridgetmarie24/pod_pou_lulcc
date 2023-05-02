@@ -1,5 +1,9 @@
 # **Analyze the Impacts of Urbanization and Climate on Diversions in the Lower Boise River Basin**
 
+## Summary ##
+
+This analysis analyzes the impacts of urbanization and climate on diverisons in the Lower Boise River Basin from 1987 to 2020. This also analyzes trend through time in flow volumes. This analysis was done because the Lower Boise River Basin is rapidly urbanizing its agricultural lands, and water managers did not possess the long term analysis to understand how the urbanization was impacting the distribution of irrigation water resources. 
+
 ## Steps to running diversion analysis: 
 
 Python scripts are basically all the data preprocessing for what goes into the models, and the R scripts are all the modeling. 
@@ -21,4 +25,8 @@ borah_epreds.R : Uses model outputs to run expected predictions based on posteri
 3) **ind_mlr_brms.R**: Runs individual GLMs for each diversion and summarized effect sizes. Outputs a csv file with the effect size for each variable and the uncertainty around it. 
 4) **trend_plots.R**: Runs Mann Kendall test and outputs plots for diversions with trends
 5) **thesis_figures.R**: This script creates all the figures in my thesis from model outputs besides the Mann Kendall analysis. Long script broken into sections based on the figures being made for each analysis
+
+## Contact Information
+
+For more information or questions regarding this analysis, please email Bridget Bittmann at bridgetbittmann@u.boisestate.edu. 
 
