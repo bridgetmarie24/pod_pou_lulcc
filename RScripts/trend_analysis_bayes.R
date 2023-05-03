@@ -124,15 +124,24 @@ sub <- subset(sums, Tail_ESS < 400)
 
 # Check if Year effect is non-zero 
 
-year_effect <- subset(sums, vars == 'Year' & abs(Estimate) > 0.001)
+year_effect <- subset(sums, vars == 'Year' & abs(Estimate) > 0.0001)
 names_long <- unique(year_effect$Name)
 for (x in 1:nrow(year_effect)){
   year_effect$sig[x] <- ifelse(between(0, year_effect$`l-95% CI`[x], year_effect$`u-95% CI`[x]), 'no', 'yes')
 } # Determine if 95% CI overlap 0 
 
-names_pos <- unique(subset(year_effect, Estimate > 0))
-names_neg <- unique(subset(year_effect, Estimate < 0))
+# Extract positive and negative, non-zero names
+names_pos <- unique(subset(year_effect, Estimate > 0 & sig == 'yes'))
+names_neg <- unique(subset(year_effect, Estimate < 0 & sig == 'yes'))
 
+# ---------------------------------------------------------------------------- #
+# Extract the predicted values for each of the places with a non-zero trend ####
+# ---------------------------------------------------------------------------- # 
+pos_names <- unique(names_pos$Name)
+neg_names <- unique(names_neg$Name)
 
-
+pos_preds <- list()
+for (i in pos_names){
+  
+}
 
