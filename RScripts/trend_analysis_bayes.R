@@ -196,3 +196,32 @@ ggsave(paste(cd, '/ManuscriptFigures/trend_bayes.svg', sep = ''),
        width = 10,
        height = 10,
        units = 'in')
+
+# ------------------------------------------------------------------ #
+# Calculate summary statistics for results and discussion section ####
+# ------------------------------------------------------------------ # 
+
+# Calculate the total median change from 1987 to 2020 and the median percent change for positive trends
+pos_results <- pos_median %>%
+  group_by(Name) %>%
+  summarize(change = max(med.pred) - min(med.pred),
+            perc_change = (max(med.pred) - min(med.pred)) / min(med.pred) * 100)
+# Calculate the total urban change for each place of use
+pos_results <- pos_div %>%
+  group_by(Name) %>%
+  summarise(urb_change = tail(class1_urban, n = 1) - head(class1_urban,n = 1)) %>%
+  left_join(pos_results)
+
+# Calculate the median change from 1987 to 2020 and median percent change for negative trends
+neg_results <- neg_median %>%
+  group_by(Name) %>%
+  summarize(change = tail(med.pred, n = 1) - head(med.pred, n = 1),
+            perc_change = (tail(med.pred, n = 1) - head(med.pred, n = 1))/head(med.pred, n = 1)*100)
+
+# Calculate the total urban change for each place of use and add to the dataframe
+neg_results <- neg_div %>%
+  group_by(Name) %>%
+  summarise(urb_change = tail(class1_urban, n = 1) - head(class1_urban,n = 1),
+            avg_div = mean(Acre_feet)) %>%
+  left_join(neg_results)
+
