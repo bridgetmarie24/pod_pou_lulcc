@@ -44,6 +44,14 @@ mae_lt <- function(model, data_compare){
   return(median(abs(resid)))
 }
 
+mae <- function(model, data_compare){
+  yhat <- (posterior_predict(model))
+  resid <- sweep(yhat, 
+                 2,
+                 data_compare,
+                 FUN="-")
+  return(median(abs(resid)))
+}
 
 # MLR figures frequentist ####
 
@@ -349,8 +357,16 @@ ggsave('~/Desktop/diversion_models/ManuscriptFigures/mix-urb-041223.tiff',
 change_urb <- epreddraws %>%
   select(.epred, unscale.urban) %>%
   group_by(unscale.urban) %>%
-  summarise(med = median(.epred),
-            avg = mean(.epred))
+  summarise(med = median(.epred)) %>%
+  mutate(change = (c(NA, NA, NA, NA, NA,NA, NA, NA, NA, NA,
+                       NA, NA, NA, NA, NA,NA, NA, NA, NA, NA,
+                       NA, NA, NA, NA, diff(med, lag = 24))))
+median(change_urb$change, na.rm = TRUE)
+change_urb <- change_urb %>%
+  summarise(change = (c(NA, NA, NA, NA, NA,NA, NA, NA, NA, NA,
+                          NA, NA, NA, NA, NA,NA, NA, NA, NA, NA,
+                          NA, NA, NA, NA, diff(med, lag = 24))))
+
 
 # Storage ##
 #Simulate data
@@ -425,7 +441,15 @@ change_prcp <- epreddraws %>%
   select(.epred, unscale.prcp) %>%
   group_by(unscale.prcp) %>%
   summarise(med = median(.epred),
-            avg = mean(.epred))
+            avg = mean(.epred)) %>%
+  mutate(change = c(NA, NA, NA, NA, NA,NA, NA, NA, NA, NA,
+                    NA, NA, NA, NA, NA,NA, NA, NA, NA, NA,
+                    NA, NA, NA, NA, NA,NA, NA, NA, NA, NA,
+                    NA, NA, NA, NA, NA,NA, NA, NA, NA, NA,
+                    NA, NA, NA, NA, NA,NA, NA, NA, NA, NA,
+                    NA, NA, NA, NA, NA,NA, NA, NA, NA, NA,
+                    NA, NA, NA, NA, NA,NA, NA, NA, NA, NA,
+                    NA, NA, NA, diff(med, lag = 73)))
 
 
 comb <- ggarrange(urban, prcp, stor, ncol = 3, labels = c('A', 'B', 'C'))
