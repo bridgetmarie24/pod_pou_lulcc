@@ -14,9 +14,10 @@ meanresids <- apply(res, 2, mean)
 data <- read.csv(paste(working_dir, 'data/arma_input_041123.csv', sep = ''))
 data$res <- meanresids
 
+# create just residual dataframe with year and name data
 resid_df <- data[, c('Name', 'Year', 'res')]
 resid_pframe <- pdata.frame(resid_df, index = c('Name', 'Year'))
 
-# test for stationarity
+# test for stationarity on the panel of data 
 purtest(resid_pframe$res, data = resid_pframe, lags = 'AIC', test = 'levinlin') 
 
